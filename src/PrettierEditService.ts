@@ -504,6 +504,16 @@ export default class PrettierEditService implements Disposable {
       options
     );
 
+    // Patch: override Prettier's tabWidth with VS Code's tabSize
+    const editor = window.visibleTextEditors.find(
+      (editor) => editor.document.uri.toString() === doc.uri.toString()
+    );
+    const tabSize = editor?.options.tabSize;
+    if (typeof tabSize === "number") {
+      prettierOptions.tabWidth = tabSize;
+    }
+    // End Patch
+
     this.loggingService.logInfo("Prettier Options:", prettierOptions);
 
     try {
